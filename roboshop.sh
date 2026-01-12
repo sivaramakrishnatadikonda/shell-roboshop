@@ -1,7 +1,7 @@
 #!/bin/bash
 AMI_ID="ami-09c813fb71547fc4f"
-SG_ID="sg-0ffc883b3a356e316"
-INSTANCES=("mongodb")
+SG_ID="sg-0ffc883b3a356e316"  
+INSTANCES=("mongodb" "frontend")
 ZONE_ID="Z092734529C8LBQP3M7WP"
 DOMAIN_NAME="tadikondadevops.site"
 
