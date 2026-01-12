@@ -8,9 +8,7 @@ DOMAIN_NAME="tadikondadevops.site"
 for instance in ${INSTANCES[@]}
 do
 
-INSTANCE_ID=$(aws ec2 run-instances --image-id ami-09c813fb71547fc4f --instance-type t2.micro 
---security-group-ids sg-0ffc883b3a356e316 --tag-specifications "ResourceType=instance,
-Tags=[{key=Name, Value=$instance}]" --query "Instances[0].InstanceId" --output text)
+INSTANCE_ID=$(aws ec2 run-instances --image-id ami-09c813fb71547fc4f --instance-type t2.micro --security-group-ids sg-0ffc883b3a356e316 --tag-specifications "ResourceType=instance,Tags=[{key=Name, Value=$instance}]" --query "Instances[0].InstanceId" --output text)
 
 if [ $instance -ne frontend ]
 
