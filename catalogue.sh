@@ -4,7 +4,7 @@ R="\e[31m"
 G="\e[32m"
 Y="\e[33m"
 N="\e[0m"
-LOGS_FOLDER="var/log/roboshop-logs"
+LOGS_FOLDER="/var/log/roboshop-logs"
 SCRIPT_NAME=$(echo $0 | cut -d "." -f1)
 LOG_FILE="$LOGS_FOLDER/$SCRIPT_NAME.log"
 SCRIPT_DIR=$PWD
@@ -59,10 +59,10 @@ VALIDATE $? "Downloading Catalogue"
 
 rm -rf /app/*
 cd /app 
-unzip /tmp/catalogue.zip 
+unzip /tmp/catalogue.zip  &>>$LOG_FILE
 VALIDATE $? "unzipping catalogue"
 
-npm install  # installing dependencies 
+npm install &>>$LOG_FILE # installing dependencies 
 VALIDATE $? "Installing dependencies"
 
 cp $SCRIPT_DIR/catalogue.service /etc/systemd/system/catalogue.service
@@ -70,12 +70,12 @@ VALIDATE $? "copying  catalogue serice"
 
 systemctl daemon-reload &>>$LOG_FILE
 systemctl enable catalogue  &>>$LOG_FILE
-systemctl start catalogue 
+systemctl start catalogue  &>>$LOG_FILE
 VALIDATE $? "starting catalogue"
 
 cp $SCRIPT_DIR/mongo.repo /etc/yum.repos.d/mongo.repo
 
-dnf install mongodb-mongosh -y 
+dnf install mongodb-mongosh -y &>>$LOG_FILE
 VALIDATE $? "Installing mongodb client"
 
 #Data base is exit or not to check mongodb
