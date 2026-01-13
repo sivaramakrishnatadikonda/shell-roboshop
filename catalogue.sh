@@ -1,5 +1,4 @@
 #!/bin/bash
-START_TIME=$(date +%s)
 USERID=$(id -u)
 R="\e[31m"
 G="\e[32m"
@@ -10,7 +9,7 @@ SCRIPT_NAME=$(echo $0 | cut -d "." -f1)
 LOG_FILE="$LOGS_FOLDER/$SCRIPT_NAME.log"
 SCRIPT_DIR=$PWD
 
-mkdir -p var/log/roboshop-logs
+mkdir -p $LOGS_FOLDER
 echo "script started executing at : $(date)" | tee -a $LOG_FILE
 
 # check the user has root priveleges or not 
@@ -90,6 +89,3 @@ else
     echo -e "Data is already loaded ---- $Y SKIPPING $N"
 fi
 
-END_TIME=$(date +%s)
-TOTAL_TIME=$(($END_TIME - $START_TIME))
-echo -e "Script execution completed sucessfully, $Y time taken: $TOTAL_TIME seconds $N" | tee -a $LOG_FILE
