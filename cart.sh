@@ -19,15 +19,15 @@ then
     echo -e "$R ERROR:: please run the script with root access $N" | tee -a $LOG_FILE
     exit 1 # give other than 0 upto 127
 else
-    echo -e "$G you are running the script with root access $N" | tee -a $LOG_FILE
+    echo -e "you are running the script with root access " | tee -a $LOG_FILE
 fi
 # validate functions takes input as exit status,what commands they tried to install
 VALIDATE(){
 if [ $1 -eq 0 ]
 then
-    echo -e "$G $2 sucessfully Install $N" | tee -a $LOG_FILE
+    echo -e "$2 is ---- $G SUCCESS $N" | tee -a $LOG_FILE
 else
-    echo -e "$R $2 failure $N" | tee -a $LOG_FILE
+    echo -e "$2 is ----$R FAILURE $N" | tee -a $LOG_FILE
     exit 1
 fi
 }
