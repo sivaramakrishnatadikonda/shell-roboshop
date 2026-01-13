@@ -52,6 +52,5 @@ VALIDATE $? "startring  rabbitmq-server" | tee -a $LOG_FILE
 rabbitmqctl add_user roboshop $RABBITMQ_PASSWORD #roboshop123
 rabbitmqctl set_permissions -p / roboshop ".*" ".*" ".*"
 
-systemctl restart mongod &>>$LOG_FILE
-VALIDATE $? "restarting mongodb" | tee -a $LOG_FILE
+
 
