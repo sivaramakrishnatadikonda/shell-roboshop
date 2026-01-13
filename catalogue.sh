@@ -60,5 +60,36 @@ VALIDATE $? "Downloading Catalogue"
 
 rm -rf /app/*
 cd /app 
-unzip /tmp/catalogue.zip | tee -a $LOG_FILE
+unzip /tmp/catalogue.zip &>>$LOG_FILE
 VALIDATE $? "unzipping catalogue"
+
+npm install &>>$LOG_FILE # installing dependencies 
+VALIDATE $? "Installing dependencies"
+
+cp $SCRIPT_DIR/catalogue.service /etc/systemd/system/catalogue.service
+VALIDATE $? "copying  catalogue serice"
+
+systemctl daemon-reload &>>$LOG_FILE
+systemctl enable catalogue  &>>$LOG_FILE
+systemctl start catalogue 
+VALIDATE $? "starting catalogue"
+
+cp $SCRIPT_DIR/mongo.repo /etc/yum.repos.d/mongo.repo
+
+dnf install mongodb-mongosh -y &>>$LOG_FILE
+VALIDATE $? "Installing mongodb client"
+
+#Data base is exit or not to check mongodb
+STATUS=$(mongosh --host mongodb.tadikondadevops.site --eval 'db.getMongo().getDBNames().indexof("catalogue")')
+
+if [ $STATUS -lt 0 ]
+then
+    mongosh --host mongodb.tadikondadevops.site </app/db/master-data.js &>>$LOG_FILE
+    VALIDATE $? "Loading data into  mongodb"
+else    
+    echo -e "Data is already loaded ---- $Y SKIPPING $N"
+fi
+
+END_TIME=$(date +%s)
+TOTAL_TIME=$(($END_TIME - $START_TIME))
+echo -e "Script execution completed sucessfully, $Y time taken: $TOTAL_TIME seconds $N" | tee -a $LOG_FILE
