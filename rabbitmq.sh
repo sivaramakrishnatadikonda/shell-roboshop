@@ -20,8 +20,9 @@ then
 else
     echo -e "$G you are running the script with root access $N" | tee -a $LOG_FILE
 fi
-echo "please enter root password to setup"
-read -s MYSQL_ROOT_PASSWORD # RoboShop@1
+
+echo "please enter rabbitmq password to setup"
+read -s RABBITMQ_PASSWORD  # RoboShop@1
 
 # validate functions takes input as exit status,what commands they tried to install
 VALIDATE(){
@@ -34,19 +35,29 @@ else
 fi
 }
 
+cp $SCRIPT_DIR/rabbitmq.repo /etc/yum.repos.d/rabbitmq.repo
+VALIDATE $? "copy rabbitmq repo" 
 
-dnf install mysql-server -y &>>$LOG_FILE
-VALIDATE $? "installing mysql-server"
+dnf install rabbitmq-server -y &>>$LOG_FILE
+VALIDATE $? "Installing rabbitmq servers" | tee -a $LOG_FILE
 
-systemctl enable mysqld &>>$LOG_FILE
-VALIDATE $? "enabling mysqld"
+systemctl enable rabbitmq-server &>>$LOG_FILE
+VALIDATE $? "Enabling rabbitmq-server" | tee -a $LOG_FILE
 
-systemctl start mysqld  &>>$LOG_FILE
-VALIDATE $? "starting mysqld"
+systemctl start rabbitmq-server &>>$LOG_FILE
+VALIDATE $? "startring  rabbitmq-server" | tee -a $LOG_FILE
 
-mysql_secure_installation --set-root-pass $MYSQL_ROOT_PASSWORD
-VALIDATE $? "starting mysqld"
 
-END_TIME=$(date +%s)
-TOTAL_TIME=$(($END_TIME - $START_TIME))
-echo -e "Script execution completed sucessfully, $Y time taken: $TOTAL_TIME seconds $N" | tee -a $LOG_FILE 
+
+rabbitmqctl add_user roboshop $RABBITMQ_PASSWORD #roboshop123
+rabbitmqctl set_permissions -p / roboshop ".*" ".*" ".*"
+
+
+
+
+sed -i 's/127.0.0.1/0.0.0.0/g' /etc/mongod.conf
+VALIDATE $? "editing mongodb.conf file for remote connections" | tee -a $LOG_FILE
+
+systemctl restart mongod &>>$LOG_FILE
+VALIDATE $? "restarting mongodb" | tee -a $LOG_FILE
+
