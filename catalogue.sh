@@ -58,8 +58,7 @@ VALIDATE $? "Creating app directory"
 curl -o /tmp/catalogue.zip https://roboshop-artifacts.s3.amazonaws.com/catalogue-v3.zip &>>$LOG_FILE
 VALIDATE $? "Downloading Catalogue"
 
-rm -rf /app/* # remove the app directory content
+rm -rf /app/*
 cd /app 
-unzip  /tmp/catalogue.zip &>>$LOG_FILE
+unzip /tmp/catalogue.zip
 VALIDATE $? "unzipping catalogue"
-
