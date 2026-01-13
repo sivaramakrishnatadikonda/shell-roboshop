@@ -62,7 +62,7 @@ VALIDATE $? "Downloading Catalogue"
 
 rm -rf /app/* # remove the app directory content
 cd /app 
-unzip /tmp/catalogue.zip
+unzip /tmp/catalogue.zip | tee -a $LOG_FILE
 VALIDATE $? "Unzipping catalogue"
 
 npm install  # installing dependencies 
