@@ -5,7 +5,8 @@ INSTANCES=("mongodb" "frontend")
 ZONE_ID="Z092734529C8LBQP3M7WP"
 DOMAIN_NAME="tadikondadevops.site"
 # creating the instances 
-for instance in ${INSTANCES[@]}
+#for instance in ${INSTANCES[@]}
+for instance in $@
 do  
     INSTANCE_ID=$(aws ec2 run-instances --image-id ami-09c813fb71547fc4f --instance-type t2.micro --security-group-ids sg-0ffc883b3a356e316 --tag-specifications "ResourceType=instance,
     Tags=[{Key=Name, Value=$instance}]" --query "Instances[0].InstanceId" --output text)
