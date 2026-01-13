@@ -1,4 +1,6 @@
 #!/bin/bash
+START_TIME=$(date +%s)
+END_TIME=$(date +%s)
 USERID=$(id -u)
 R="\e[31m"
 G="\e[32m"
@@ -30,22 +32,22 @@ else
 fi
 }
 
-dnf module list nginx
+dnf module list nginx &>>$LOG_FILE
 VALIDATE $? "listing nginx server"
 
-dnf module disable nginx -y
+dnf module disable nginx -y &>>$LOG_FILE
 VALIDATE $? "disabling nginx"
 
-dnf module enable nginx:1.24 -y
+dnf module enable nginx:1.24 -y &>>$LOG_FILE
 VALIDATE $? "enabling nginx:1.24"
 
-dnf install nginx -y
+dnf install nginx -y &>>$LOG_FILE
 VALIDATE $? "installing nginx server"
 
 systemctl enable nginx 
 VALIDATE $? "enabling nginx"
 
-systemctl start nginx 
+systemctl start nginx  &>>$LOG_FILE
 VALIDATE $? "starting nginx"
 
 rm -rf /usr/share/nginx/html/* 
@@ -61,5 +63,8 @@ VALIDATE $? "unzip frontend code"
 cp $SCRIPT_DIR/nginx.conf /etc/nginx/nginx.conf
 VALIDATE $? "coping nginx.conf"
 
-systemctl restart nginx 
+systemctl restart nginx  &>>$LOG_FILE
 VALIDATE $? "restarting nginx"
+
+TOTAL_TIME=$(($END_TIME - $START_TIME))
+echo -e "Script execution completed sucessfully, $Y time taken: $TOTAL_TIME seconds $N" | tee -a $LOG_FILE

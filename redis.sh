@@ -31,23 +31,21 @@ else
     exit 1
 fi
 }
-cp $SCRIPT_DIR/mongo.repo /etc/yum.repos.d/mongo.repo 
-VALIDATE $? "copy mongo.repo" 
 
-dnf install mongodb-org -y &>>$LOG_FILE
-VALIDATE $? "Installing mongodb servers" | tee -a $LOG_FILE
+dnf module disable redis -y
+VALIDATE $? "disabling redis"
 
-systemctl enable mongod  &>>$LOG_FILE
-VALIDATE $? "Enabling mongodb" | tee -a $LOG_FILE
+dnf module enable redis:7 -y
+VALIDATE $? "enabling redis:7"
 
-systemctl start mongod  &>>$LOG_FILE
-VALIDATE $? "Starting mongodb" | tee -a $LOG_FILE
+dnf install redis -y 
+VALIDATE $? "installing redis"
 
-sed -i 's/127.0.0.1/0.0.0.0/g' /etc/mongod.conf
-VALIDATE $? "editing mongodb.conf file for remote connections" | tee -a $LOG_FILE
+sed -i -e 's/127.0.0.1/0.0.0.0/g' -e '/protected-mode/ c protected-mode no' /etc/redis/redis.conf
+VALIDATE $? "change protected-mode yes to no and provide firewall allow all in  redis config"
 
-systemctl restart mongod &>>$LOG_FILE
-VALIDATE $? "restarting mongodb" | tee -a $LOG_FILE
+systemctl enable redis 
+VALIDATE $? "enabling redis"
 
-TOTAL_TIME=$(($END_TIME - $START_TIME))
-echo -e "Script execution completed sucessfully, $Y time taken: $TOTAL_TIME seconds $N" | tee -a $LOG_FILE
+systemctl start redis 
+VALIDATE $? "starting redis"

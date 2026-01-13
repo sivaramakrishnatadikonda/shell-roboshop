@@ -57,43 +57,28 @@ fi
 mkdir -p  /app 
 VALIDATE $? "Creating app directory"
 
-curl -o /tmp/catalogue.zip https://roboshop-artifacts.s3.amazonaws.com/catalogue-v3.zip 
-VALIDATE $? "Downloading Catalogue"
+curl -L -o /tmp/user.zip https://roboshop-artifacts.s3.amazonaws.com/cart-v3.zip
+VALIDATE $? "Downloading user"
 
 rm -rf /app/* # remove the app directory content
 cd /app 
-unzip /tmp/catalogue.zip
-VALIDATE $? "Unzipping catalogue"
+unzip /tmp/user.zip
+VALIDATE $? "Unzipping user"
 
 npm install &>>$LOG_FILE # installing dependencies 
 VALIDATE $? "Installing dependencies"
 
-cp $SCRIPT_DIR/catalogue.service /etc/systemd/system/catalogue.service
-VALIDATE $? "copying  catalogue.serice"
+cp $SCRIPT_DIR/user.service /etc/systemd/system/user.service
+VALIDATE $? "copying  user.serice"
 
 systemctl daemon-reload
 VALIDATE $? "daemon-reloading"
 
-systemctl enable catalogue 
-VALIDATE $? "enabling catalogue"
+systemctl enable user 
+VALIDATE $? "enabling user"
 
-systemctl start catalogue
-VALIDATE $? "starting catalogue"
+systemctl start user
+VALIDATE $? "starting user"
 
-cp $SCRIPT_DIR/mongo.repo /etc/yum.repos.d/mongo.repo
-VALIDATE $? "coping mongo.repo client"
-
-dnf install mongodb-mongosh -y &>>$LOG_FILE
-VALIDATE $? "Installing mongodb client"
-
-#Data base is exit or not to check mongodb
-STATUS=$(mongosh --host mongodb.tadikondadevops.site --eval 'db.getMongo().getDBNames().indexof("catalogue")')
-if[ $STATUS -lt 0 ]
-then
-    mongosh --host mongodb.tadikondadevops.site </app/db/master-data.js
-    VALIDATE $? "Installing mongodb client"
-else    
-    echo -e "Data is already loaded ---- $Y SKIPPING $N"
-fi
 TOTAL_TIME=$(($END_TIME - $START_TIME))
 echo -e "Script execution completed sucessfully, $Y time taken: $TOTAL_TIME seconds $N" | tee -a $LOG_FILE

@@ -14,9 +14,11 @@ do
     then
         IP=$(aws ec2 describe-instances --instance-ids $INSTANCE_ID   --query "Reservations[0].
         Instances[0].PrivateIpAddress" --output text)
+        RECORD_NAME="$instance.$DOMAIN_NAME"
     else
         IP=$(aws ec2 describe-instances --instance-ids $INSTANCE_ID   --query "Reservations[0].
         Instances[0].PublicIpAddress" --output text)
+         RECORD_NAME="$DOMAIN_NAME"
     fi
     echo "$instance IP Address: $IP"
     # creating and updating the route53 records 
@@ -28,7 +30,7 @@ do
         ,"Changes": [{
         "Action"              : "UPSERT"
         ,"ResourceRecordSet"  : {
-            "Name"              : "'$instance'.'$DOMAIN_NAME'"
+            "Name"              : "'$RECORD_NAME'"
             ,"Type"             : "A"
             ,"TTL"              : 1
             ,"ResourceRecords"  : [{
