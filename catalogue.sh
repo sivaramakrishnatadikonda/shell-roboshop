@@ -88,6 +88,7 @@ VALIDATE $? "Installing mongodb client"
 
 #Data base is exit or not to check mongodb
 STATUS=$(mongosh --host mongodb.tadikondadevops.site --eval 'db.getMongo().getDBNames().indexof("catalogue")')
+
 if[ $STATUS -lt 0 ]
 then
     mongosh --host mongodb.tadikondadevops.site </app/db/master-data.js
