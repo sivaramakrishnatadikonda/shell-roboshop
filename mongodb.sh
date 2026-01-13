@@ -28,7 +28,7 @@ else
     exit 1
 fi
 }
-cp mongo.rep /etc/yum.repos.d/mongo.repo 
+cp mongo.repo /etc/yum.repos.d/mongo.repo 
 VALIDATE $? "copy mongo.repo" 
 dnf install mongodb-org -y &>>$LOG_FILE
 VALIDATE $? "Installing mongodb servers" | tee -a $LOG_FILE
