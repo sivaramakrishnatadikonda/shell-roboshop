@@ -63,10 +63,10 @@ go build &>>$LOG_FILE
 VALIDATE $? "Installing dependencies"
 
 cp $SCRIPT_DIR/dispatch.service /etc/systemd/system/dispatch.service
-VALIDATE $? "copying  catalogue serice"
+VALIDATE $? "copying  dispatch serice"
 
 systemctl daemon-reload &>>$LOG_FILE
 systemctl enable dispatch  &>>$LOG_FILE
 systemctl start dispatch  &>>$LOG_FILE
-VALIDATE $? "starting payment"
+VALIDATE $? "starting dispatch"
 
