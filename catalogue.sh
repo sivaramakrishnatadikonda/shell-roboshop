@@ -84,7 +84,7 @@ STATUS=$(mongosh --host mongodb.tadikondadevops.site --eval 'db.getMongo().getDB
 
 if [ $STATUS -lt 0 ]
 then
-    mongosh --host mongodb.tadikondadevops.site </app/db/master-data.js &>>$LOG_FILE
+    mongosh --host mongodb.tadikondadevops.site </app/db/master-data.js 
     VALIDATE $? "Loading data into  mongodb"
 else    
     echo -e "Data is already loaded ---- $Y SKIPPING $N"
