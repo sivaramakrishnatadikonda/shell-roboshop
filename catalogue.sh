@@ -20,15 +20,15 @@ then
     echo -e "$R ERROR:: please run the script with root access $N" | tee -a $LOG_FILE
     exit 1 # give other than 0 upto 127
 else
-    echo -e "$G you are running the script with root access $N" | tee -a $LOG_FILE
+    echo -e " you are running  with root access" | tee -a $LOG_FILE
 fi
 # validate functions takes input as exit status,what commands they tried to install
 VALIDATE(){
 if [ $1 -eq 0 ]
 then
-    echo -e "$G $2 sucessfully Install $N" | tee -a $LOG_FILE
+    echo -e "$2 is --- $G SUCCESS $N" | tee -a $LOG_FILE
 else
-    echo -e "$R $2 failure $N" | tee -a $LOG_FILE
+    echo -e "$2 is --- $R FAILURE $N" | tee -a $LOG_FILE
     exit 1
 fi
 }
@@ -48,7 +48,7 @@ id roboshop
 if [ $? -ne 0 ]
 then
 
-    useradd --system --home /app --shell /sbin/nologin --comment "roboshop system user" roboshop
+    useradd --system --home /app --shell /sbin/nologin --comment "roboshop system user" roboshop &>>$LOG_FILE
     VALIDATE $? "Creating roboshop system user"
 else
     echo -e "system roboshop already created ----- $Y skipping $N"
@@ -62,28 +62,28 @@ VALIDATE $? "Downloading Catalogue"
 
 rm -rf /app/* # remove the app directory content
 cd /app 
-unzip /tmp/catalogue.zip 
+unzip /tmp/catalogue.zip &>>$LOG_FILE
 VALIDATE $? "Unzipping catalogue"
 
-npm install  # installing dependencies 
+npm install &>>$LOG_FILE # installing dependencies 
 VALIDATE $? "Installing dependencies"
 
 cp $SCRIPT_DIR/catalogue.service /etc/systemd/system/catalogue.service
 VALIDATE $? "copying  catalogue.serice"
 
-systemctl daemon-reload
+systemctl daemon-reload &>>$LOG_FILE
 VALIDATE $? "daemon-reloading"
 
-systemctl enable catalogue 
+systemctl enable catalogue  &>>$LOG_FILE
 VALIDATE $? "enabling catalogue"
 
-systemctl start catalogue
+systemctl start catalogue &>>$LOG_FILE
 VALIDATE $? "starting catalogue"
 
 cp $SCRIPT_DIR/mongo.repo /etc/yum.repos.d/mongo.repo
 VALIDATE $? "coping mongo.repo client"
 
-dnf install mongodb-mongosh -y 
+dnf install mongodb-mongosh -y &>>$LOG_FILE
 VALIDATE $? "Installing mongodb client"
 
 #Data base is exit or not to check mongodb
@@ -91,7 +91,7 @@ STATUS=$(mongosh --host mongodb.tadikondadevops.site --eval 'db.getMongo().getDB
 
 if [ $STATUS -lt 0 ]
 then
-    mongosh --host mongodb.tadikondadevops.site </app/db/master-data.js
+    mongosh --host mongodb.tadikondadevops.site </app/db/master-data.js &>>$LOG_FILE
     VALIDATE $? "Installing mongodb client"
 else    
     echo -e "Data is already loaded ---- $Y SKIPPING $N"
