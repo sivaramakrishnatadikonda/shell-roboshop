@@ -1,6 +1,5 @@
 #!/bin/bash
 START_TIME=$(date +%s)
-END_TIME=$(date +%s)
 USERID=$(id -u)
 R="\e[31m" 
 G="\e[32m"
@@ -49,5 +48,6 @@ VALIDATE $? "editing mongodb.conf file for remote connections" | tee -a $LOG_FIL
 systemctl restart mongod &>>$LOG_FILE
 VALIDATE $? "restarting mongodb" | tee -a $LOG_FILE
 
+END_TIME=$(date +%s)
 TOTAL_TIME=$(($END_TIME - $START_TIME))
 echo -e "Script execution completed sucessfully, $Y time taken: $TOTAL_TIME seconds $N" | tee -a $LOG_FILE
