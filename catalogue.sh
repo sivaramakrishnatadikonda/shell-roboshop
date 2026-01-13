@@ -13,6 +13,7 @@ SCRIPT_DIR=$PWD
 
 mkdir -p $LOGS_FOLDER
 echo "script started executing at : $(date)" | tee -a $LOG_FILE
+
 # check the user has root priveleges or not 
 if [ $USERID != 0 ]
 then    
