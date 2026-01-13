@@ -52,12 +52,6 @@ VALIDATE $? "startring  rabbitmq-server" | tee -a $LOG_FILE
 rabbitmqctl add_user roboshop $RABBITMQ_PASSWORD #roboshop123
 rabbitmqctl set_permissions -p / roboshop ".*" ".*" ".*"
 
-
-
-
-sed -i 's/127.0.0.1/0.0.0.0/g' /etc/mongod.conf
-VALIDATE $? "editing mongodb.conf file for remote connections" | tee -a $LOG_FILE
-
 systemctl restart mongod &>>$LOG_FILE
 VALIDATE $? "restarting mongodb" | tee -a $LOG_FILE
 
