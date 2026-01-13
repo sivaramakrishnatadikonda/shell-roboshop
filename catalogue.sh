@@ -60,5 +60,5 @@ VALIDATE $? "Downloading Catalogue"
 
 rm -rf /app/*
 cd /app 
-unzip /tmp/catalogue.zip
+unzip /tmp/catalogue.zip &>>$LOG_FILE
 VALIDATE $? "unzipping catalogue"
