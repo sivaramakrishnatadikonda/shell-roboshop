@@ -76,7 +76,7 @@ VALIDATE $? "starting catalogue"
 
 cp $SCRIPT_DIR/mongo.repo /etc/yum.repos.d/mongo.repo
 
-dnf install mongodb-mongosh -y &>>$LOG_FILE
+dnf install mongodb-mongosh -y 
 VALIDATE $? "Installing mongodb client"
 
 #Data base is exit or not to check mongodb
