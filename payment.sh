@@ -22,7 +22,8 @@ else
 fi
 
 echo "please enter root password to setup"
-read -s MYSQL_ROOT_PASSWORD
+read -s MYSQL_ROOT_PASSWORD  # RoboShop@1
+
 # validate functions takes input as exit status,what commands they tried to install
 VALIDATE(){
 if [ $1 -eq 0 ]
@@ -63,7 +64,7 @@ pip3 install -r requirements.txt
 VALIDATE $? "Installing dependencies"
 
 cp $SCRIPT_DIR/payment.service /etc/systemd/system/payment.service
-VALIDATE $? "copying  catalogue serice"
+VALIDATE $? "copying  payment serice"
 
 systemctl daemon-reload &>>$LOG_FILE
 systemctl enable payment  &>>$LOG_FILE
